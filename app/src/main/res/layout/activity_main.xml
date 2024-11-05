@@ -44,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/image_capture_button"
+            android:id="@+id/btn_create9"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:elevation="2dp"
@@ -55,7 +55,7 @@
             app:layout_constraintEnd_toStartOf="@id/vertical_centerline" />
 
         <Button
-            android:id="@+id/video_capture_button"
+            android:id="@+id/btn_create_circle"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:elevation="2dp"
