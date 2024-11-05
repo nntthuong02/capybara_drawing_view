@@ -303,43 +303,6 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         invalidate()
     }
 
-    fun saveDrawingToBitmap(context: Context): Boolean {
-        // Tạo bitmap để lưu hình vẽ với độ trong suốt
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-
-        // Đặt màu nền của canvas là trong suốt
-        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-
-        // Vẽ lên canvas từ DrawingView
-        draw(canvas) // Vẽ các đường dẫn lên canvas
-
-        return try {
-            val contentValues = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, "drawing_${System.currentTimeMillis()}.png")
-                put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-            }
-            val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-
-            uri?.let {
-                val outputStream = context.contentResolver.openOutputStream(it)
-                outputStream?.let { stream ->
-                    // Lưu bitmap với định dạng PNG
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                    stream.flush()
-                    Toast.makeText(context, "Drawing saved to gallery", Toast.LENGTH_SHORT).show()
-                }
-                outputStream?.close()
-                true
-            } ?: false
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
-    }
-
-
     private fun createMirroredHorizontalPathLeft(sourcePath: Path, targetPath: Path) {
         val width = -(xMax - xMin + 13f)
         val mirrorMatrix = android.graphics.Matrix().apply {
@@ -390,67 +353,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         invalidate() // Yêu cầu cập nhật lại view
     }
 
-//    fun saveCircularDrawingToBitmap(
-//        context: Context,
-//        radiusPx: Float = width.toFloat() / 2 - width.toFloat() / 6,
-//        defaultY: Float = 0.7f
-//    ): Uri? {
-//        // Tính toán các giá trị trung tâm
-//        val centerX = width.toFloat() / 2
-//        val centerY = height.toFloat() / 3.5646877f
-//
-//        // Tạo bitmap ban đầu để lưu hình tròn
-//        val originalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//        val originalCanvas = Canvas(originalBitmap)
-//
-//        // Vẽ hình trong suốt trên canvas
-//        originalCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-//
-//        // Cắt vùng hình tròn
-//        val pathCircle = Path().apply {
-//            addCircle(centerX, centerY, radiusPx, Path.Direction.CW)
-//        }
-//        originalCanvas.clipPath(pathCircle)
-//
-//        // Vẽ đường dẫn lên canvas từ DrawingView
-//        draw(originalCanvas)
-//
-//        // Tính toán kích thước và vị trí hình vuông bao quanh hình tròn
-//        val squareSize = (radiusPx * 2).toInt()
-//        val left = (centerX - radiusPx).toInt()
-//        val top = (centerY - radiusPx).toInt()
-//
-//        // Tạo bitmap mới để chứa hình vuông cắt ra từ hình tròn
-//        val squareBitmap = Bitmap.createBitmap(originalBitmap, left, top, squareSize, squareSize)
-//
-//        // Lưu bitmap hình vuông vào thư viện
-//        return try {
-//            val contentValues = ContentValues().apply {
-//                put(MediaStore.Images.Media.DISPLAY_NAME, "square_circular_drawing_${System.currentTimeMillis()}.png")
-//                put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-//                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-//            }
-//            val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-//
-//            uri?.let {
-//                val outputStream = context.contentResolver.openOutputStream(it)
-//                outputStream?.let { stream ->
-//                    squareBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-//                    stream.flush()
-//                    Toast.makeText(context, "Square circular drawing saved to gallery", Toast.LENGTH_SHORT).show()
-//                }
-//                outputStream?.close()
-//                true
-//            }
-//            uri
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//            null
-//        }
-//    }
-
     fun saveCircularDrawingToBitmap(
-        context: Context,
         radiusPx: Float = width.toFloat() / 2 - width.toFloat() / 6,
         defaultY: Float = 0.7f
     ): Bitmap {
@@ -481,60 +384,6 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         return Bitmap.createBitmap(originalBitmap, left, top, squareSize, squareSize)
     }
 
-
-    fun saveCenteredSquareBitmap(
-        context: Context,
-        radiusPx: Float = width.toFloat() / 2 - width.toFloat() / 6,
-        defaultY: Float = 0.7f
-    ): Uri? {
-        // Tính toán các giá trị trung tâm
-        val centerX = width.toFloat() / 2
-        val centerY = height.toFloat() / 3.17f
-
-        // Tạo bitmap ban đầu từ DrawingView để cắt hình vuông
-        val originalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val originalCanvas = Canvas(originalBitmap)
-
-        // Vẽ nền trong suốt trên canvas
-        originalCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-
-        // Vẽ nội dung lên canvas từ DrawingView
-        draw(originalCanvas)
-
-        // Tính toán kích thước hình vuông dựa trên đường kính của hình tròn
-        val squareSize = (radiusPx * 2).toInt()
-
-        // Tính toán vị trí của hình vuông sao cho trung tâm hình vuông trùng với trung tâm hình tròn
-        val left = (centerX - radiusPx).toInt()
-        val top = (centerY - radiusPx).toInt()
-
-        // Tạo bitmap mới chứa hình vuông cắt ra từ bitmap ban đầu
-        val squareBitmap = Bitmap.createBitmap(originalBitmap, left, top, squareSize, squareSize)
-
-        // Lưu bitmap hình vuông vào thư viện
-        return try {
-            val contentValues = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, "centered_square_drawing_${System.currentTimeMillis()}.png")
-                put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-            }
-            val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-
-            uri?.let {
-                val outputStream = context.contentResolver.openOutputStream(it)
-                outputStream?.let { stream ->
-                    squareBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                    stream.flush()
-                    Toast.makeText(context, "Centered square drawing saved to gallery", Toast.LENGTH_SHORT).show()
-                }
-                outputStream?.close()
-            }
-            uri
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
 
 
 }
