@@ -81,10 +81,10 @@ class MainActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         //
-//        btnPlay.setOnClickListener {
-//                val intent = Intent(this, DrawingViewActivity::class.java)
-//                startActivity(intent)
-//        }
+        btnPlay.setOnClickListener {
+                val intent = Intent(this, DrawingViewActivity::class.java)
+                startActivity(intent)
+        }
 
     }
 

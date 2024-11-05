@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PorterDuff
+import android.graphics.RectF
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
@@ -32,7 +33,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var move0x2 = 0f
     private var scaleFactor = 1f
     private var scaleWidthFactor = 1f
-    private val path = Path()
+
     private var xMin = Float.MAX_VALUE
     private var xMax = Float.MIN_VALUE
     private val flippedPathHorizontal = Path()
@@ -42,6 +43,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private val flippedPathVertical = Path()
     private var isMirrored1 = false
 
+    private val path = Path()
     private var path1 = Path()
     private var path2 = Path()
     private var path3 = Path()
@@ -57,30 +59,62 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private var imgLate = Path()
 
     // Hàm để thêm điểm vào path khi người dùng vẽ
+
+//    private val allowedRegion = RectF(width.toFloat() / 4f, 0.6f * height.toFloat() , width.toFloat() * 3f / 4f, 0.8f * height.toFloat())
+
+    private var isDrawing = false
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val allowedRegion = RectF(width.toFloat() / 3f, 0.6f * height.toFloat() , width.toFloat() * 2f / 3f, 0.6f * height.toFloat() + width.toFloat() / 3f)
+        val x = event.x
+        val y = event.y
+
+        Log.d("Size.View Size", "Width: $width, Height: $height")
+        Log.d("Size.left", (width.toFloat() / 3f).toString())
+        Log.d("Size.right", (width.toFloat() * 2f / 3f).toString())
+        Log.d("Size.top", (0.8f * height.toFloat() - width.toFloat() / 3f).toString())
+        Log.d("Size.bottom", (0.8f * height.toFloat()).toString())
+
+        // Kiểm tra xem tọa độ có nằm trong vùng cho phép không
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                path.moveTo(event.x, event.y)
-                xMin = event.x
-                xMax = event.x
-                yMin = event.y
-                yMax = event.y
-                invalidate()
-                Log.d("xMin", xMin.toString())
-                Log.d("xMax", xMax.toString())
+                if (allowedRegion.contains(x, y)) {
+                    isDrawing = true
+//                    path.reset()
+                    path.moveTo(x, y)
+                    xMin = event.x
+                    xMax = event.x
+                    yMin = event.y
+                    yMax = event.y
+                }else {
+                    // Nếu chạm ngoài, không bắt đầu vẽ
+                    isDrawing = false
+                }
+
+
             }
             MotionEvent.ACTION_MOVE -> {
-                path.lineTo(event.x, event.y)
-                xMin = minOf(xMin, event.x)
-                xMax = maxOf(xMax, event.x)
-                yMin = minOf(yMin, event.y)
-                yMax = maxOf(yMax, event.y)
-                invalidate()
+                if (allowedRegion.contains(x, y)) {
+                    if (!isDrawing && allowedRegion.contains(x, y)) {
+                        // Bắt đầu vẽ nếu chuyển từ ngoài vào trong
+                        isDrawing = true
+                        path.moveTo(x, y)
+                    }
+                    path.lineTo(event.x, event.y)
+                    xMin = minOf(xMin, event.x)
+                    xMax = maxOf(xMax, event.x)
+                    yMin = minOf(yMin, event.y)
+                    yMax = maxOf(yMax, event.y)
+                }
+
+            }
+            MotionEvent.ACTION_UP -> {
+                isDrawing = false
             }
         }
+        invalidate()
         return true
     }
-
     //
 
 
@@ -415,7 +449,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         }
     }
 
-    fun saveCenteredSquareBitmapFromCircle(
+    fun saveCenteredSquareBitmap(
         context: Context,
         radiusPx: Float = width.toFloat() / 2 - width.toFloat() / 6,
         defaultY: Float = 0.7f
@@ -424,30 +458,24 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val centerX = width.toFloat() / 2
         val centerY = height.toFloat() / 3.5646877f
 
-        // Tạo bitmap ban đầu để lưu hình tròn
+        // Tạo bitmap ban đầu từ DrawingView để cắt hình vuông
         val originalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val originalCanvas = Canvas(originalBitmap)
 
-        // Vẽ hình trong suốt trên canvas
+        // Vẽ nền trong suốt trên canvas
         originalCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 
-        // Cắt vùng hình tròn
-        val pathCircle = Path().apply {
-            addCircle(centerX, centerY, radiusPx, Path.Direction.CW)
-        }
-        originalCanvas.clipPath(pathCircle)
-
-        // Vẽ đường dẫn lên canvas từ DrawingView
+        // Vẽ nội dung lên canvas từ DrawingView
         draw(originalCanvas)
 
-        // Tính toán kích thước hình vuông dựa trên bán kính của hình tròn
+        // Tính toán kích thước hình vuông dựa trên đường kính của hình tròn
         val squareSize = (radiusPx * 2).toInt()
 
-        // Tính toán vị trí của hình vuông dựa vào tâm của hình tròn
+        // Tính toán vị trí của hình vuông sao cho trung tâm hình vuông trùng với trung tâm hình tròn
         val left = (centerX - radiusPx).toInt()
         val top = (centerY - radiusPx).toInt()
 
-        // Tạo bitmap mới chứa hình vuông cắt ra từ hình tròn
+        // Tạo bitmap mới chứa hình vuông cắt ra từ bitmap ban đầu
         val squareBitmap = Bitmap.createBitmap(originalBitmap, left, top, squareSize, squareSize)
 
         // Lưu bitmap hình vuông vào thư viện
@@ -474,5 +502,6 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             null
         }
     }
+
 
 }
