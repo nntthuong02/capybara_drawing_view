@@ -243,7 +243,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 canvas.translate(move0x1 + 1 * cellWidth / scaleFactor, move0y + 1 * cellHeight / scaleFactor)
                 Log.d("height1", height.toString())
                 Log.d("height2", (move0y * scaleFactor + 1 * cellWidth).toString())
-                Log.d("height3", (height / (scaleHeight + 1 * cellWidth)).toString())
+                Log.d("height3", (height / (scaleHeight + 1 * cellHeight)).toString())
                 Log.d("scaleFactorOnDraw", scaleFactor.toString())
 
                 canvas.drawPath(path5, paint)
@@ -359,7 +359,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     ): Bitmap {
         // Tính toán các giá trị trung tâm
         val centerX = width.toFloat() / 2
-        val centerY = height.toFloat() / 3.5646877f
+        val centerY = height.toFloat() / 3.9344263f
 
         // Tạo bitmap ban đầu để lưu hình tròn
         val originalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
