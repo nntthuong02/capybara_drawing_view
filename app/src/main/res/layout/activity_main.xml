@@ -13,12 +13,23 @@
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="#80ED1919"/>
 
     <com.app.recordandplayvideo.drawingview.DrawingView
         android:id="@+id/drawingView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.8"
+        android:layout_height="match_parent"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@android:color/transparent" />
@@ -26,6 +37,8 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_height="0dp"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:orientation="horizontal"
         app:layout_constraintHeight_percent="0.2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -35,7 +48,7 @@
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:elevation="2dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
             android:text="Create 9"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -45,9 +58,17 @@
             android:id="@+id/video_capture_button"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_marginStart="20dp"
             android:elevation="2dp"
             android:text="Create Circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/vertical_centerline" />
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:elevation="2dp"
+            android:layout_marginStart="10dp"
+            android:text="Clear"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/vertical_centerline" />
     </LinearLayout>
@@ -68,6 +89,33 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/play"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp" />
+        android:layout_marginEnd="30dp"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/circle"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/remove_bg_ai_1730718575580"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@id/circle"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/circle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/circle"
+        app:layout_constraintTop_toTopOf="@id/circle"
+        app:layout_constraintVertical_bias="0.0"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

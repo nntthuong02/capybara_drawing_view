@@ -9,21 +9,23 @@
         android:id="@+id/circle"
         android:layout_width="200dp"
         android:layout_height="0dp"
-        android:background="#6AC51B1B"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@drawable/remove_bg_ai_1730718575580"/>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="@id/circle"
-        app:layout_constraintEnd_toEndOf="@id/circle"
-        app:layout_constraintTop_toTopOf="@id/circle"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@id/circle"
-        android:scaleType="centerCrop"/>
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/circle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/circle"
+        app:layout_constraintTop_toTopOf="@id/circle"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

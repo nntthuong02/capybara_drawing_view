@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
+import android.content.res.Resources
 import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -37,15 +38,16 @@ class DrawingViewActivity : AppCompatActivity() {
                 binding.view.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                 // Lấy chiều cao thực tế của DrawingView
-                val drawingViewHeight = drawingView.height
-
-                val marginTop = (drawingViewHeight * 0.6).toInt()
-                val marginHorizontal = (drawingView.width / 3)
-                val marginBottom = drawingView.height - marginHorizontal
+//                val drawingViewHeight = drawingView.height
+                val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+                val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+                val marginTop = (screenHeight * 0.6).toInt()
+                val marginHorizontal = (screenWidth / 3)
+//                val marginBottom = drawingView.height - marginHorizontal
 
                 // Áp dụng marginTop
                 val params = binding.view.layoutParams as ConstraintLayout.LayoutParams
-                params.setMargins(marginHorizontal, marginTop, marginHorizontal, marginBottom)
+                params.setMargins(marginHorizontal, marginTop, marginHorizontal, 0)
                 binding.view.layoutParams = params
                 binding.view.requestLayout()
             }

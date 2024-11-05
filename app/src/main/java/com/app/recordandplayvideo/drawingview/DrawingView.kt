@@ -22,7 +22,7 @@ import android.widget.Toast
 
 class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val paint = Paint().apply {
-        color = Color.BLACK
+        color = Color.WHITE
         style = Paint.Style.STROKE
         strokeWidth = 15f
     }
@@ -177,7 +177,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         path8.addPath(imgPath4)
 
         val cellWidth = width / 3f
-        val cellHeight = height * 0.7f / 3f
+        val cellHeight = height * 0.5f / 3f
 
         val scaleWidth = width / 8f
         val scaleHeight = height * 0.7f / 8f
@@ -233,14 +233,14 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 // Vẽ ô (0, 1)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x, move0y + 1 * cellWidth / scaleFactor)
+                canvas.translate(move0x, move0y + 1 * cellHeight / scaleFactor)
                 canvas.drawPath(path4, paint)
                 canvas.restore()
 
                 // Vẽ ô (1, 1)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x1 + 1 * cellWidth / scaleFactor, move0y + 1 * cellWidth / scaleFactor)
+                canvas.translate(move0x1 + 1 * cellWidth / scaleFactor, move0y + 1 * cellHeight / scaleFactor)
                 Log.d("height1", height.toString())
                 Log.d("height2", (move0y * scaleFactor + 1 * cellWidth).toString())
                 Log.d("height3", (height / (scaleHeight + 1 * cellWidth)).toString())
@@ -252,28 +252,28 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 // Vẽ ô (2, 1)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x2 + 2 * cellWidth / scaleFactor, move0y + 1 * cellWidth / scaleFactor)
+                canvas.translate(move0x2 + 2 * cellWidth / scaleFactor, move0y + 1 * cellHeight / scaleFactor)
                 canvas.drawPath(path6, paint)
                 canvas.restore()
 
                 // Vẽ ô (0, 2)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x, move0y + 2 * cellWidth / scaleFactor)
+                canvas.translate(move0x, move0y + 2 * cellHeight / scaleFactor)
                 canvas.drawPath(imgPath4, paint)
                 canvas.restore()
 
                 // Vẽ ô (1, 2)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x1 + 1 * cellWidth / scaleFactor, move0y + 2 * cellWidth / scaleFactor)
+                canvas.translate(move0x1 + 1 * cellWidth / scaleFactor, move0y + 2 * cellHeight / scaleFactor)
                 canvas.drawPath(path8, paint)
                 canvas.restore()
 
                 // Vẽ ô (2, 2)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x2 + 2 * cellWidth / scaleFactor, move0y + 2 * cellWidth / scaleFactor)
+                canvas.translate(move0x2 + 2 * cellWidth / scaleFactor, move0y + 2 * cellHeight / scaleFactor)
                 canvas.drawPath(path9, paint)
                 canvas.restore()
 
@@ -456,7 +456,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     ): Uri? {
         // Tính toán các giá trị trung tâm
         val centerX = width.toFloat() / 2
-        val centerY = height.toFloat() / 3.5646877f
+        val centerY = height.toFloat() / 3.17f
 
         // Tạo bitmap ban đầu từ DrawingView để cắt hình vuông
         val originalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
