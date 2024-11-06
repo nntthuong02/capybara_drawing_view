@@ -70,12 +70,15 @@ class MainActivity : AppCompatActivity() {
             })
         viewBinding.btnCreate9.setOnClickListener {
             viewBinding.drawingView.setLayoutModeCanvas(LayoutMode.SPACED)
+            viewBinding.drawingView.setMarginTop(20)
             viewBinding.drawingView.duplicateAndFlip()
+            viewBinding.drawingView.duplicateBitmap()
         }
 
         viewBinding.btnCreateCircle.setOnClickListener {
+//            val bitmap0 = viewBinding.drawingView.getDrawingBitmap()
+//            val bitmap1 = viewBinding.drawingView.flipBitmapVertically(bitmap0!!)
             val bitmap = viewBinding.drawingView.saveCircularDrawingToBitmap()
-
             viewBinding.apply {
                 imageView.visibility = View.VISIBLE
                 circle.visibility = View.VISIBLE
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity() {
         }
         viewBinding.clearButton.setOnClickListener {
             viewBinding.drawingView.clear()
+            viewBinding.drawingView.clearCanvas()
             viewBinding.apply {
                 imageView.visibility = View.GONE
                 circle.visibility = View.GONE

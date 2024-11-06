@@ -21,7 +21,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 
-class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class Complete(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val paint = Paint().apply {
         color = Color.WHITE
         style = Paint.Style.STROKE
