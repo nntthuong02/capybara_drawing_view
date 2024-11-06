@@ -69,22 +69,30 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         viewBinding.btnCreate9.setOnClickListener {
+            viewBinding.drawingView.setLayoutModeCanvas(LayoutMode.SPACED)
+            viewBinding.drawingView.duplicateAndFlip()
             viewBinding.drawingView.duplicateBitmap()
         }
 
         viewBinding.btnCreateCircle.setOnClickListener {
+//            val bitmap0 = viewBinding.drawingView.getDrawingBitmap()
+//            val bitmap1 = viewBinding.drawingView.flipBitmapVertically(bitmap0!!)
             val bitmap = viewBinding.drawingView.saveCircularDrawingToBitmap()
             viewBinding.apply {
-                imageView.visibility = View.VISIBLE
+//                imageView.visibility = View.VISIBLE
                 circle.visibility = View.VISIBLE
                 drawingView.visibility = View.GONE
                 view.visibility = View.GONE
 
+                zoomBall.zoom(bitmap)
+                zoomBall.visibility = View.VISIBLE
+                zoomBall.startAutoZoom()
                 // Đặt trực tiếp Bitmap vào ImageView
                 imageView.setImageBitmap(bitmap)
             }
         }
         viewBinding.clearButton.setOnClickListener {
+            viewBinding.drawingView.clear()
             viewBinding.drawingView.clearCanvas()
             viewBinding.apply {
                 imageView.visibility = View.GONE
@@ -92,6 +100,9 @@ class MainActivity : AppCompatActivity() {
                 drawingView.visibility = View.VISIBLE
                 view.visibility = View.VISIBLE
 
+                //
+                viewBinding.zoomBall.setGlobalScale(0.1f)// Hoặc giá trị mặc định của bạn
+                viewBinding.zoomBall.warp(viewBinding.zoomBall.width.toFloat(), viewBinding.zoomBall.height.toFloat())
             }
         }
 

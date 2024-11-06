@@ -21,13 +21,7 @@
         android:theme="@style/Theme.RecordAndPlayVideo"
         tools:targetApi="31">
         <activity
-            android:name=".drawingview.DrawingViewActivity"
-            android:exported="false" />
-        <activity
-            android:name=".VideoPlayerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PlayVideoActivity"
+            android:name=".drawingview.BitmapMesh"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

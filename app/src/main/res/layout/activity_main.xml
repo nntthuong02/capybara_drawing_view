@@ -29,7 +29,6 @@
         android:id="@+id/drawingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@android:color/transparent" />
@@ -101,7 +100,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/remove_bg_ai_1730718575580"
         android:visibility="gone"/>
 
     <ImageView
@@ -117,5 +115,30 @@
         app:layout_constraintTop_toTopOf="@id/circle"
         app:layout_constraintVertical_bias="0.0"
         android:visibility="gone"/>
+
+
+    <com.app.recordandplayvideo.drawingview.ZoomHelper
+        android:id="@+id/zoomBall"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@id/circle"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/circle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/circle"
+        app:layout_constraintTop_toTopOf="@id/circle"
+        android:background="@android:color/transparent"
+        android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/zoom"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/play"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
