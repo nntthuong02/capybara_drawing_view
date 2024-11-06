@@ -64,7 +64,12 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     private var isDrawing = false
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val allowedRegion = RectF(width.toFloat() / 3f, 0.6f * height.toFloat() , width.toFloat() * 2f / 3f, 0.6f * height.toFloat() + width.toFloat() / 3f)
+        val allowedRegion = RectF(
+            width.toFloat() / 3f,
+            0.6f * height.toFloat(),
+            width.toFloat() * 2f / 3f,
+            0.6f * height.toFloat() + width.toFloat() / 3f
+        )
         val x = event.x
         val y = event.y
 
@@ -86,13 +91,14 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                     xMax = event.x
                     yMin = event.y
                     yMax = event.y
-                }else {
+                } else {
                     // Nếu chạm ngoài, không bắt đầu vẽ
                     isDrawing = false
                 }
 
 
             }
+
             MotionEvent.ACTION_MOVE -> {
                 if (allowedRegion.contains(x, y)) {
                     if (!isDrawing && allowedRegion.contains(x, y)) {
@@ -108,6 +114,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 }
 
             }
+
             MotionEvent.ACTION_UP -> {
                 isDrawing = false
             }
@@ -118,42 +125,43 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     //
 
 
-
     fun setPackedHorizontal(scale: Float = scaleFactor, default: Float = 0.75f) {
-        if(scale >= 1){
+        if (scale >= 1) {
             //hinh be
             move0x = -xMin + (width * 1f - (xMax - xMin) * 4) / 2
-            move0x1 = move0x + 2 * (xMax-xMin) - width / 3f / scale + 13 * scale
-            move0x2 = move0x1 + 2 * (xMax-xMin) - 1 * width / 3f/scale + 13f
+            move0x1 = move0x + 2 * (xMax - xMin) - width / 3f / scale + 13 * scale
+            move0x2 = move0x1 + 2 * (xMax - xMin) - 1 * width / 3f / scale + 13f
         } else {
-            move0x = -xMin+ (width * 1f - (xMax - xMin) * 4 * scale) / 2 / scale
-            move0x1 = move0x + 2 * (xMax-xMin) - width / 3f / scale + 13 * scale
-            move0x2 = move0x1 + 2 * (xMax-xMin) - 1 * width / 3f/scale + 13f
+            move0x = -xMin + (width * 1f - (xMax - xMin) * 4 * scale) / 2 / scale
+            move0x1 = move0x + 2 * (xMax - xMin) - width / 3f / scale + 13 * scale
+            move0x2 = move0x1 + 2 * (xMax - xMin) - 1 * width / 3f / scale + 13f
         }
     }
 
 
-    fun setSpaceHorizontal(default: Float = 0.5f, scale: Float = scaleFactor){
-        move0x = -(xMin) + default * width / 3f /scale
-        move0x1 = -(xMin) + default * width / 3f /scale
-        move0x2 = -(xMin) + default * width / 3f /scale
+    fun setSpaceHorizontal(default: Float = 0.5f, scale: Float = scaleFactor) {
+        move0x = -(xMin) + default * width / 3f / scale
+        move0x1 = -(xMin) + default * width / 3f / scale
+        move0x2 = -(xMin) + default * width / 3f / scale
     }
 
     fun setDistanceHorizontal(scale: Float = scaleFactor, default: Float = 0.75f) {
-        if(scale >= 1){
+        if (scale >= 1) {
             //hinh be
             move0x = -xMin + (width * 1f - (xMax - xMin) * 4) / 2
-            move0x1 = move0x + 2 * (xMax-xMin) - width / 3f / scale + 13 * scale
-            move0x2 = move0x1 + 2 * (xMax-xMin) - 1 * width / 3f/scale + 13f
+            move0x1 = move0x + 2 * (xMax - xMin) - width / 3f / scale + 13 * scale
+            move0x2 = move0x1 + 2 * (xMax - xMin) - 1 * width / 3f / scale + 13f
         } else {
-            move0x = -xMin+ (width * 1f - (xMax - xMin) * 4 * scale) / 2 / scale
-            move0x1 = move0x + 2 * (xMax-xMin) - width / 3f / scale + 13 * scale
-            move0x2 = move0x1 + 2 * (xMax-xMin) - 1 * width / 3f/scale + 13f
+            move0x = -xMin + (width * 1f - (xMax - xMin) * 4 * scale) / 2 / scale
+            move0x1 = move0x + 2 * (xMax - xMin) - width / 3f / scale + 13 * scale
+            move0x2 = move0x1 + 2 * (xMax - xMin) - 1 * width / 3f / scale + 13f
         }
     }
+
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
         canvas.drawPath(path, paint) // Vẽ nét gốc
 
         // Tạo các đường đi mới mà không tích lũy
@@ -240,7 +248,10 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 // Vẽ ô (1, 1)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x1 + 1 * cellWidth / scaleFactor, move0y + 1 * cellHeight / scaleFactor)
+                canvas.translate(
+                    move0x1 + 1 * cellWidth / scaleFactor,
+                    move0y + 1 * cellHeight / scaleFactor
+                )
                 Log.d("height1", height.toString())
                 Log.d("height2", (move0y * scaleFactor + 1 * cellWidth).toString())
                 Log.d("height3", (height / (scaleHeight + 1 * cellWidth)).toString())
@@ -252,7 +263,10 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 // Vẽ ô (2, 1)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x2 + 2 * cellWidth / scaleFactor, move0y + 1 * cellHeight / scaleFactor)
+                canvas.translate(
+                    move0x2 + 2 * cellWidth / scaleFactor,
+                    move0y + 1 * cellHeight / scaleFactor
+                )
                 canvas.drawPath(path6, paint)
                 canvas.restore()
 
@@ -266,14 +280,20 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 // Vẽ ô (1, 2)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x1 + 1 * cellWidth / scaleFactor, move0y + 2 * cellHeight / scaleFactor)
+                canvas.translate(
+                    move0x1 + 1 * cellWidth / scaleFactor,
+                    move0y + 2 * cellHeight / scaleFactor
+                )
                 canvas.drawPath(path8, paint)
                 canvas.restore()
 
                 // Vẽ ô (2, 2)
                 canvas.save()
                 canvas.scale(scaleFactor, scaleFactor)
-                canvas.translate(move0x2 + 2 * cellWidth / scaleFactor, move0y + 2 * cellHeight / scaleFactor)
+                canvas.translate(
+                    move0x2 + 2 * cellWidth / scaleFactor,
+                    move0y + 2 * cellHeight / scaleFactor
+                )
                 canvas.drawPath(path9, paint)
                 canvas.restore()
 
@@ -323,6 +343,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         // Cập nhật lại view
         invalidate()
     }
+
     private fun createMirroredVerticalPathTop(sourcePath: Path, targetPath: Path) {
         val height = -yMax + yMin - 13f
         val mirrorMatrix = android.graphics.Matrix().apply {
@@ -341,7 +362,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         createMirrored(path, path1)
         createMirroredHorizontalPathLeft(path1, path3)
         createMirroredVerticalPathTop(path1, imgPath4)
-        createMirroredVerticalPathTop(path1,path4)
+        createMirroredVerticalPathTop(path1, path4)
         createMirroredHorizontalPathLeft(path4, imgPath5)
         createMirroredHorizontalPathLeft(path4, path6)
         createMirroredHorizontalPathLeft(imgPath4, imgPath8)
@@ -359,7 +380,7 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     ): Bitmap {
         // Tính toán các giá trị trung tâm
         val centerX = width.toFloat() / 2
-        val centerY = height.toFloat() / 3.5646877f
+        val centerY = height.toFloat() / 3.9617975f
 
         // Tạo bitmap ban đầu để lưu hình tròn
         val originalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -383,7 +404,6 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
         return Bitmap.createBitmap(originalBitmap, left, top, squareSize, squareSize)
     }
-
 
 
 }
