@@ -30,6 +30,8 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val mInverse = Matrix()
     private var globalScale = 0.1f // hệ số zoom tổng thể
     private var initDimen = 400
+    private var initialX = 0f
+    private var initialY = 0f // Vị trí ban đầu của trục tọa độ canvas
     // Paint object for drawing the circle
     private val paint = Paint().apply {
         color = Color.RED // Set the circle color to red
@@ -67,7 +69,7 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
         mMatrix.setTranslate(10f, 10f)
         mMatrix.invert(mInverse)
 
-        warp(width.toFloat(), height.toFloat())
+        warp()
     }
 
     private fun setXY(array: FloatArray, index: Int, x: Float, y: Float) {
@@ -85,6 +87,9 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
         val centerY = (h - mBitmap!!.height) / 2f
         mMatrix.setTranslate(centerX, centerY)
         mMatrix.invert(mInverse)
+
+        initialX = centerX
+        initialY = centerY
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -104,7 +109,7 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
         canvas.drawBitmapMesh(mBitmap!!, WIDTH, HEIGHT, mVerts, 0, null, 0, null)
     }
 
-    fun warp(cx: Float, cy: Float) {
+    fun warp() {
         val centerX = mBitmap!!.width / 2f
         val centerY = mBitmap!!.height / 2f
         val maxDistance = Math.sqrt((centerX * centerX + centerY * centerY).toDouble()).toFloat()
@@ -156,7 +161,7 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
                         currentScale = targetScale
                     }
                     globalScale = currentScale
-                    warp(width.toFloat(), height.toFloat()) // Áp dụng zoom
+                    warp() // Áp dụng zoom
                     invalidate() // Cập nhật giao diện
 
                     handler.postDelayed(this, 20) // Tiếp tục sau 30ms
@@ -164,6 +169,50 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
             }
         }
         handler.post(runnable) // Bắt đầu thực hiện zoom
+    }
+    fun reset() {
+        // Khôi phục lại giá trị mặc định của globalScale và initDimen
+        globalScale = 0.1f
+        initDimen = 400
+
+        // Khôi phục lại các ma trận về trạng thái ban đầu
+        mMatrix.reset()
+        mInverse.reset()
+
+        // Tính toán sự dịch chuyển hiện tại của canvas
+        val currentMatrixValues = FloatArray(9)
+        mMatrix.getValues(currentMatrixValues)
+
+        // Tính toán vị trí mới của trục tọa độ (0, 0) sau reset
+        val currentX = currentMatrixValues[Matrix.MTRANS_X]
+        val currentY = currentMatrixValues[Matrix.MTRANS_Y]
+
+        // Tính toán sự dịch chuyển cần thiết để đưa canvas về vị trí ban đầu
+        val offsetX = initialX - currentX
+        val offsetY = initialY - currentY
+
+        // Áp dụng sự dịch chuyển lại ma trận
+        mMatrix.postTranslate(offsetX, offsetY)
+        mMatrix.invert(mInverse)
+
+        // Khôi phục lại các mảng điểm mVerts và mOrig
+        if (mBitmap != null) {
+            val centerX = mBitmap!!.width / 2f
+            val centerY = mBitmap!!.height / 2f
+
+            for (i in 0 until COUNT * 2 step 2) {
+                val x = (i / 2) % (WIDTH + 1) * (mBitmap!!.width / WIDTH.toFloat())
+                val y = (i / 2) / (WIDTH + 1) * (mBitmap!!.height / HEIGHT.toFloat())
+
+                mOrig[i] = x
+                mOrig[i + 1] = y
+
+                mVerts[i] = x
+                mVerts[i + 1] = y
+            }
+        }
+
+        invalidate() // Cập nhật lại giao diện
     }
 
 }

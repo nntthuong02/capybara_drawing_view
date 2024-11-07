@@ -31,37 +31,16 @@ class DrawingSquareView(context: Context, attrs: AttributeSet) : View(context, a
 
     private var bitmap4: Bitmap? = null
 
-    private var move0x = 0f
-    private var move0x1 = 0f
-    private var move0x2 = 0f
-    private var scaleFactor = 1f
-    private var scaleWidthFactor = 1f
-
     private var xMin = Float.MAX_VALUE
     private var xMax = Float.MIN_VALUE
-    private val flippedPathHorizontal = Path()
 
     private var yMin = Float.MAX_VALUE
     private var yMax = Float.MIN_VALUE
-    private val flippedPathVertical = Path()
-    private var isMirrored1 = false
     private var isMirroredBitmap = false
 
 
     private val path = Path()
-    private var path1 = Path()
-    private var path2 = Path()
-    private var path3 = Path()
-    private var imgPath4 = Path()
-    private var path4 = Path()
-    private var path5 = Path()
-    private var imgPath5 = Path()
-    private var path6 = Path()
-    private var path7 = Path()
-    private var path8 = Path()
-    private var imgPath8 = Path()
-    private var path9 = Path()
-    private var imgLate = Path()
+
 
     // Hàm để thêm điểm vào path khi người dùng vẽ
 
@@ -124,80 +103,14 @@ class DrawingSquareView(context: Context, attrs: AttributeSet) : View(context, a
 
 
 
-    fun setPackedHorizontal(scale: Float = scaleFactor, default: Float = 0.75f) {
-        if(scale >= 1){
-            //hinh be
-            move0x = -xMin + (width * 1f - (xMax - xMin) * 4) / 2
-            move0x1 = move0x + 2 * (xMax-xMin) - width / 3f / scale + 13 * scale
-            move0x2 = move0x1 + 2 * (xMax-xMin) - 1 * width / 3f/scale + 13f
-        } else {
-            move0x = -xMin+ (width * 1f - (xMax - xMin) * 4 * scale) / 2 / scale
-            move0x1 = move0x + 2 * (xMax-xMin) - width / 3f / scale + 13 * scale
-            move0x2 = move0x1 + 2 * (xMax-xMin) - 1 * width / 3f/scale + 13f
-        }
-    }
 
 
-    fun setSpaceHorizontal(default: Float = 0.5f, scale: Float = scaleFactor){
-        move0x = -(xMin) + default * width / 3f /scale
-        move0x1 = -(xMin) + default * width / 3f /scale
-        move0x2 = -(xMin) + default * width / 3f /scale
-    }
-
-    fun setDistanceHorizontal(scale: Float = scaleFactor, default: Float = 0.75f) {
-        if(scale >= 1){
-            //hinh be
-            move0x = -xMin + (width * 1f - (xMax - xMin) * 4) / 2
-            move0x1 = move0x + 2 * (xMax-xMin) - width / 3f / scale + 13 * scale
-            move0x2 = move0x1 + 2 * (xMax-xMin) - 1 * width / 3f/scale + 13f
-        } else {
-            move0x = -xMin+ (width * 1f - (xMax - xMin) * 4 * scale) / 2 / scale
-            move0x1 = move0x + 2 * (xMax-xMin) - width / 3f / scale + 13 * scale
-            move0x2 = move0x1 + 2 * (xMax-xMin) - 1 * width / 3f/scale + 13f
-        }
-    }
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawPath(path, paint) // Vẽ nét gốc
 
-        // Tạo các đường đi mới mà không tích lũy
-//        path1.reset()
-//        path1.addPath(path)
 
-//        path2.reset()
-//        path2.addPath(path)
-//        path2.addPath(path3)
-//
-//        path4.reset()
-//        path4.addPath(path)
-//        path4.addPath(imgPath4)
-//
-//        path5.reset()
-//        path5.addPath(path4)
-//        path5.addPath(imgPath5)
-//
-//        path8.reset()
-//        path8.addPath(imgPath8)
-//        path8.addPath(imgPath4)
-
-        val cellWidth = width / 3f
-        val cellHeight = height * 0.5f / 3f
-
-        val scaleWidth = width / 8f
-        val scaleHeight = height * 0.5f / 8f
-
-        val verticalMove = yMax - yMin // Bạn cần xác định yMax và yMin
-        val horizontalMove = xMax - xMin
-
-        // Tính toán a và b
-        val a = scaleWidth / horizontalMove
-        val b = scaleHeight / verticalMove
-//        scaleWidthFactor = b
-
-        // Lấy giá trị lớn hơn giữa a và b
-        val maxScale = minOf(a, b)
-        scaleFactor = if (maxScale < 1) maxScale else 1f
 
         //
         val singleBitmapSize = width / 6
@@ -287,21 +200,7 @@ class DrawingSquareView(context: Context, attrs: AttributeSet) : View(context, a
     }
     fun clear() {
         path.reset()
-        flippedPathHorizontal.reset()
-        flippedPathVertical.reset()
-        path1.reset()
-        path2.reset()
-        path3.reset()
-        imgPath4.reset()
-        path4.reset()
-        path5.reset()
-        imgPath5.reset()
-        path6.reset()
-        path7.reset()
-        path8.reset()
-        imgPath8.reset()
-        path9.reset()
-        isMirrored1 = false
+
         invalidate()
     }
 
@@ -338,17 +237,7 @@ class DrawingSquareView(context: Context, attrs: AttributeSet) : View(context, a
     }
 
     // Hàm gọi từ nút Create
-    fun duplicateAndFlip() {
-        isMirrored1 = true
-        createMirrored(path, path1)
-        createMirroredHorizontalPathLeft(path1, path3)
-        createMirroredVerticalPathTop(path1, imgPath4)
-        createMirroredVerticalPathTop(path1,path4)
-        createMirroredHorizontalPathLeft(path4, imgPath5)
-        createMirroredHorizontalPathLeft(path4, path6)
-        createMirroredHorizontalPathLeft(imgPath4, imgPath8)
-        createMirroredHorizontalPathLeft(imgPath4, path9)
-    }
+
 
     /**/
 
@@ -433,39 +322,5 @@ class DrawingSquareView(context: Context, attrs: AttributeSet) : View(context, a
 
         return Bitmap.createBitmap(originalBitmap, left, top, squareSize, squareSize)
     }
-
-
-
-    fun saveDrawingToBitmap(): Bitmap {
-        // Tạo một bitmap với kích thước của RectF
-        val allowedRegion = RectF(
-            width.toFloat() / 3f,
-            0.6f * height.toFloat(),
-            width.toFloat() * 2f / 3f,
-            0.6f * height.toFloat() + width.toFloat() / 3f
-        )
-
-        // Tính kích thước của bitmap dựa trên RectF
-        val rectWidth = allowedRegion.width().toInt()
-        val rectHeight = allowedRegion.height().toInt()
-
-        // Tạo bitmap với kích thước chính xác
-        val bitmap = Bitmap.createBitmap(rectWidth, rectHeight, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-
-        // Dịch chuyển canvas để vẽ từ gốc (0, 0)
-        canvas.translate(-allowedRegion.left, -allowedRegion.top)
-
-        // Vẽ đường path của người dùng lên canvas
-        canvas.drawPath(path, paint)
-
-        // Reset lại bản vẽ sau khi lưu (tùy chọn)
-        path.reset()
-
-        return bitmap
-    }
-
-
-
 
 }
