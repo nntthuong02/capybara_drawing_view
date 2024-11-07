@@ -12,6 +12,7 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.os.Handler
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.app.recordandplayvideo.R
@@ -28,11 +29,14 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val mMatrix = Matrix()
     private val mInverse = Matrix()
     private var globalScale = 0.1f // hệ số zoom tổng thể
-
+    private var initDimen = 400
     // Paint object for drawing the circle
     private val paint = Paint().apply {
         color = Color.RED // Set the circle color to red
         style = Paint.Style.FILL // Fill the circle
+    }
+    fun setInitDimens(default: Int){
+        initDimen = default
     }
 
     fun setGlobalScale(default: Float){
@@ -46,7 +50,8 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
         } else {
             mBitmap = bitmap
         }
-        mBitmap = Bitmap.createScaledBitmap(mBitmap!!, 400, 400, true)
+        mBitmap = Bitmap.createScaledBitmap(mBitmap!!, initDimen, initDimen, true)
+        Log.d("initDimen", initDimen.toString())
         val w = mBitmap!!.width.toFloat()
         val h = mBitmap!!.height.toFloat()
 
@@ -83,16 +88,16 @@ class ZoomHelper(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     override fun onDraw(canvas: Canvas) {
-        // Tính toán bán kính dựa trên kích thước của Bitmap
-        val bitmapSize = Math.max(mBitmap!!.width, mBitmap!!.height) // Lấy kích thước lớn nhất giữa chiều rộng và chiều cao của bitmap
-        val radius = bitmapSize / 2f // Bán kính sẽ bằng một nửa chiều dài cạnh
-
-        // Vẽ nền là một hình tròn màu đỏ
-        val centerX = width / 2f
-        val centerY = height / 2f
-
-        // Vẽ hình tròn nền màu đỏ với đường kính bằng kích thước của bitmap
-        canvas.drawCircle(centerX, centerY, radius, paint)
+//        // Tính toán bán kính dựa trên kích thước của Bitmap
+//        val bitmapSize = Math.max(mBitmap!!.width, mBitmap!!.height) // Lấy kích thước lớn nhất giữa chiều rộng và chiều cao của bitmap
+//        val radius = bitmapSize / 2f // Bán kính sẽ bằng một nửa chiều dài cạnh
+//
+//        // Vẽ nền là một hình tròn màu đỏ
+//        val centerX = width / 2f
+//        val centerY = height / 2f
+//
+//        // Vẽ hình tròn nền màu đỏ với đường kính bằng kích thước của bitmap
+//        canvas.drawCircle(centerX, centerY, radius, paint)
 
         // Áp dụng ma trận và vẽ bitmap mesh
         canvas.concat(mMatrix)

@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
             viewBinding.drawingView.duplicateBitmap()
         }
 
+
         viewBinding.btnCreateCircle.setOnClickListener {
 //            val bitmap0 = viewBinding.drawingView.getDrawingBitmap()
 //            val bitmap1 = viewBinding.drawingView.flipBitmapVertically(bitmap0!!)
@@ -84,9 +85,28 @@ class MainActivity : AppCompatActivity() {
                 drawingView.visibility = View.GONE
                 view.visibility = View.GONE
 
-                zoomBall.zoom(bitmap)
-                zoomBall.visibility = View.VISIBLE
-                zoomBall.startAutoZoom()
+                viewBinding.circle.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        // Lấy kích thước pixel
+                        val width = viewBinding.circle.width
+                        val height = viewBinding.circle.height
+                        Log.d("CircleSize", "Width: $width, Height: $height")
+
+                        val widtdEdit: Double = width * (400.0 / 546.0)
+                        Log.d("widtdEdit", widtdEdit.toString())
+                        zoomBall.setInitDimens(widtdEdit.toInt())
+                        Log.d("width test", (width).toString())
+                        zoomBall.zoom(bitmap)
+                        zoomBall.visibility = View.VISIBLE
+                        zoomBall.startAutoZoom()
+                        // Xóa listener sau khi lấy giá trị để tránh gọi nhiều lần
+                        viewBinding.circle.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        // Hiển thị kích thước
+                    }
+                })
+//                zoomBall.zoom(bitmap)
+//                zoomBall.visibility = View.VISIBLE
+//                zoomBall.startAutoZoom()
                 // Đặt trực tiếp Bitmap vào ImageView
                 imageView.setImageBitmap(bitmap)
             }
